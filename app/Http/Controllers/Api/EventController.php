@@ -10,12 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
 {
-    /**
-     * Cria um novo evento.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+    
     public function store(Request $request)
     {
         try {
@@ -25,13 +20,14 @@ class EventController extends Controller
                     'error' => 'Usuário não autenticado'
                 ], 401);
             }
-
+        
             // Validando os dados de entrada e definindo mensagens personalizadas
             $validatedData = $request->validate([
                 'title' => 'required|string|min:4|max:100',  // Título do evento
                 'description' => 'required|string|min:10',  // Descrição do evento
                 'date' => 'required|date',  // Data do evento
                 'location' => 'required|string|min:3|max:255',  // Local do evento
+                'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validação de imagem
             ], [
                 // Mensagens de erro personalizadas
                 'title.required' => 'O título é obrigatório.',
@@ -51,27 +47,38 @@ class EventController extends Controller
                 'location.min' => 'O local deve ter pelo menos 3 caracteres.',
                 'location.max' => 'O local não pode exceder 255 caracteres.',
                 
+                'main_image.required' => 'A imagem principal do evento é obrigatória.',
+                'main_image.image' => 'O arquivo enviado deve ser uma imagem.',
+                'main_image.mimes' => 'A imagem deve ser dos tipos: jpeg, png, jpg, gif, svg.',
+                'main_image.max' => 'A imagem não pode exceder 2MB.',
             ]);
-
+        
             // Pega o ID do usuário logado
-            $userId = Auth::id();  // Atalho para obter apenas o ID do usuário
-
-            // Criando o evento com os dados validados
+            $userId = Auth::id();
+        
+            // Armazenando a imagem principal
+            $mainImagePath = $request->file('main_image')->store('events', 'public');
+        
+            // Gerar o link público da imagem
+            $mainImageUrl = asset('storage/' . $mainImagePath);
+        
+            // Criando o evento com os dados validados e a imagem armazenada
             $event = Event::create([
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'],
                 'date' => $validatedData['date'],
                 'location' => $validatedData['location'],
                 'organizer_id' => $userId,
+                'main_image' => $mainImageUrl, // Armazenando o link da imagem
             ]);
-
+        
             // Retornando a resposta com o status de sucesso e os dados do evento criado
             return response()->json([
                 'status' => true,
                 'message' => 'Evento criado com sucesso',
                 'event' => $event
             ], 201);
-
+        
         } catch (ValidationException $e) {
             // Caso ocorra algum erro de validação, retorna um erro com as mensagens de validação
             return response()->json([
@@ -79,9 +86,16 @@ class EventController extends Controller
                 'message' => 'Erro de validação.',
                 'errors' => $e->errors()  // Captura e retorna os erros de validação
             ], 422);
+        } catch (\Exception $e) {
+            // Caso ocorra outro erro inesperado
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao criar evento.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
-
+    
     /**
      * Exibe todos os eventos.
      *

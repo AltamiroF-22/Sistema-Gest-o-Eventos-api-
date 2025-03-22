@@ -15,7 +15,14 @@ class Event extends Model
         'description', 
         'date', 
         'location', 
-        'organizer_id'
+        'organizer_id',
+        'main_image', // Adicionando o campo 'main_image' no mass assignment
+        'other_images' // Adicionando o campo 'other_images' no mass assignment
+    ];
+
+    // Definindo o cast para o campo 'other_images', pois ele é um campo JSON
+    protected $casts = [
+        'other_images' => 'array',
     ];
 
     /**
