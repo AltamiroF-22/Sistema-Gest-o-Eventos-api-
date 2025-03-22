@@ -113,4 +113,12 @@ class EventController extends Controller
             'events' => $events
         ], 200);
     }
+
+    public function show (Event $event){
+        
+        return response()->json([
+            'status' => true,
+            'event' => $event
+        ],200);
+    }
 }

@@ -15,8 +15,9 @@ Route::get('/users', [UserController::class, 'index']); // GET http://127.0.0.1:
 // Rota de login
 Route::post('/login', [LoginController::class, 'login']); // POST http://127.0.0.1:8000/api/login
 
-Route::get('/events', [EventController::class, 'index']); // POST http://127.0.0.1:8000/api/create-event
+Route::get('/events', [EventController::class, 'index']); // GET http://127.0.0.1:8000/api/events
 
+Route::get('/events/{event}', [EventController::class, 'show']); // GET http://127.0.0.1:8000/api/events
 
 // Rotas privadas
 Route::group(['middleware' => ['auth:sanctum']], function() {

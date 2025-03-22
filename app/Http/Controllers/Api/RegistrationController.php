@@ -102,7 +102,7 @@ class RegistrationController extends Controller
             $userId = Auth::id();
 
             // Pega todos os eventos criados pelo usuário
-            $events = Event::where('organizer_id', $userId)->get();
+            $events = Event::where('organizer_id', $userId)->paginate(10);
 
             // Retorna os eventos encontrados
             return response()->json([
