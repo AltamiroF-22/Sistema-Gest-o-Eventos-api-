@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('description');  // Descrição do evento
             $table->dateTime('date');  // Data e hora do evento
             $table->string('location');  // Localização do evento
+            $table->string('main_image');  // Imagem principal do evento (obrigatória)
+            $table->json('other_images')->nullable();  // Imagens adicionais do evento (opcional)
             $table->foreignId('organizer_id')->constrained('users')->onDelete('cascade');  // Referência ao organizador (usuário)
             $table->timestamps();  // Timestamps padrão (created_at, updated_at)
         });

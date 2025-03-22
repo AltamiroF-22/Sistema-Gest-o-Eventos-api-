@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,12 @@ Route::get('/users', [UserController::class, 'index']); // GET http://127.0.0.1:
 // Rota de login
 Route::post('/login', [LoginController::class, 'login']); // POST http://127.0.0.1:8000/api/login
 
-// Rota privada para logout
+Route::get('/events', [EventController::class, 'index']); // POST http://127.0.0.1:8000/api/create-event
+
+
+// Rotas privadas
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/logout/{user}', [LoginController::class, 'logout']); // POST http://127.0.0.1:8000/api/logout
+    
+    Route::post('/create-event', [EventController::class, 'store']); // POST http://127.0.0.1:8000/api/create-event
 });
