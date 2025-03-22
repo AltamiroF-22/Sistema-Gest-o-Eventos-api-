@@ -66,4 +66,14 @@ class UserController extends Controller
             ], 422);
         }
     }
+
+    public function index(){
+        $users = User::orderBy("id", "DESC")->paginate(10);
+
+        return response()->json([
+            'status' => true,
+            'message' => $users
+        ], 200);
+    }
+
 }
