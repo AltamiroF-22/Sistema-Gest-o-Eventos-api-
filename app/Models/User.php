@@ -21,8 +21,26 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
+      /**
+     * Relacionamento: um usuário pode criar muitos eventos
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'organizer_id');
+    }
+
+    /**
+     * Relacionamento: um usuário pode se inscrever em muitos eventos
+     */
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+
+    
     /**
      * The attributes that should be hidden for serialization.
      *

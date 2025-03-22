@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id();  // ID do evento
+            $table->string('title');  // Título do evento
+            $table->text('description');  // Descrição do evento
+            $table->dateTime('date');  // Data e hora do evento
+            $table->string('location');  // Localização do evento
+            $table->foreignId('organizer_id')->constrained('users')->onDelete('cascade');  // Referência ao organizador (usuário)
+            $table->timestamps();  // Timestamps padrão (created_at, updated_at)
         });
     }
 
