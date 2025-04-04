@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\EventsExportExcelController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +24,8 @@ Route::post('/login', [LoginController::class, 'login']); // Login
 // Eventos
 Route::get('/events', [EventController::class, 'index']); // Listar todos os eventos
 Route::get('/events/{event}', [EventController::class, 'show']); // Detalhes de um evento
+Route::get('/export-events', [EventsExportExcelController::class, 'export']);
+
 
 /*
 |--------------------------------------------------------------------------
